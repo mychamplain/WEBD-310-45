@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!--
+  @package    Server-Side Scripting - PHP
+
+  @created    13th November 2021
+  @author     Llewellyn van der Merwe <https://git.vdm.dev/Llewellyn>
+  @git        WEBD-310-45 <https://git.vdm.dev/Llewellyn/WEBD-310-45>
+  @license    GNU General Public License version 2 or later; see LICENSE.txt
+
+  @week3
+  Basic form that is posting to Paycheck.php (see description there)
+
+ -->
+<head>
+    <title>Paycheck</title>
+    <meta http-equiv="content-type"
+          content="text/html; charset=utf-8"/>
+</head>
+<body>
+<h2 style="text-align:center">Paycheck Form</h2>
+<form id="calculate" name="calculate" action="Paycheck.php" method="post" onSubmit="return checkForm();">
+    <div>Number of Hours (per/week):&nbsp;&nbsp;
+        <input type="text" name="hours"/>&nbsp;
+        <span id="hour-error" style="color: red; visibility:hidden;">only integer values allowed</span>
+    </div>
+    <br/>
+    <div>Hourly Wage:&nbsp;&nbsp;
+        <input type="text" name="wage" value="120"/>&nbsp;
+        <span id="wage-error" style="color: red; visibility:hidden;">only integer values allowed</span>
+    </div>
+    <br/>
+    <div>
+        <input type="reset" value="Clear Form" onclick="resetForm();"/>&nbsp;&nbsp;
+        <input type="submit" name="Submit" value="Calculate"/></div>
+</form>
+<script type="text/javascript">
+    // reset or hide errors
+    function resetForm() {
+        document.getElementById('hour-error').style.visibility = "hidden";
+        document.getElementById('wage-error').style.visibility = "hidden";
+    }
+
+    // validate data (basic)
+    function checkForm() {
+        // convert the form to an object
+        let formData = new FormData(document.getElementById("calculate"));
+        // post the form
+        let allowed = true;
+        // we just validate int here
+        if (!isInt(formData.get("hours"))) {
+            document.getElementById('hour-error').style.visibility = "visible";
+            // show the wrong value in console
+            console.log(formData.get("hours"));
+            // stop the posting
+            allowed = false;
+        }
+        if (!isInt(formData.get("wage"))) {
+            document.getElementById('wage-error').style.visibility = "visible";
+            // show the wrong value in console
+            console.log(formData.get("wage"));
+            // stop the posting
+            allowed = false;
+        }
+        // stop the posting if not valid
+        return allowed;
+        // to test server side validation
+        // return true;
+    }
+
+    // Thanks to https://stackoverflow.com/a/14794066/1429677
+    function isInt(value) {
+        return !isNaN(value) && (function (x) {
+            return (x | 0) === x;
+        })(parseFloat(value))
+    }
+</script>
+</body>
+</html>
